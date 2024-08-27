@@ -1,106 +1,84 @@
 <template>
-  <Navbar />
-  <Event :text="text[eventTextNum]"/>
-  {{  eventTextNum }}
-  <SearchBar 
-    :data="data_temp" 
-    @searchMovie="searchMovie($event)"
-  />
-  <p>
-    <button @click="showAllMovie" class="btn-all">전체보기</button>
-  </p>
-  <Movies 
-    :data="data_temp"
-    @openModal="isModal=true;selectedMovie=$event"
-    @increseLike="increseLike($event)"
-  />
-  <Modal 
-    :data="data" 
-    :isModal="isModal" 
-    :selectedMovie="selectedMovie"
-    @closeModal="isModal=false"
-  />
+  <h1>영화정보</h1>
+  <div v-for="(movie, i) in data" :key="i" class="item">
+    <figure>
+      <img :src="`${movie.imgUrl}`" :alt="movie.title">
+    </figure>
+    <div class="info">
+    <h3 class="bg-yellow">{{ movie.title }}</h3>
+    <p>개봉: {{ movie.year }}</p>
+    <p>장르: {{ movie.category }}</p>
+    <button @click="increseLike(i)">좋아요</button> <span>{{ movie.like }}</span>
+    <p><button @click = "isModal = true">상세보기</button></p>
+    </div>
+  </div>
 
+
+  <div class="modal" v-if="isModal">
+    <div class="inner">
+      <h3>Detail</h3>
+      <p>영화 상세정보</p>
+      <button @click="isModal = false">닫기</button>
+    </div>
+  </div>
 </template>
 
 <script>
-import data from './assets/movies'; // 영화 데이터
-import Navbar from './components/Navbar.vue';
-import Event from './components/Event.vue'; // 이벤트 박스
-import Modal from './components/Modal.vue';
-import Movies from './components/Movies.vue';
-import SearchBar from './components/SearchBar.vue'; // 검색창
-console.log(data);
-
 export default {
   name: 'App',
   data() {
     return {
-      isModal: false, 
-      data: data, // 원본
-      data_temp: [...data], // 사본
-      selectedMovie: 0,
-      text: [ 
-        'NETPLIX 강렬한 운명의 드라마, 경기크리처',
-        '디즈니 100주년 기념작, 위시',
-        '그날, 대한민국의 운명이 바뀌었다, 서울의 봄'
-      ],
-      eventTextNum: 0,
-      interval: null,
+      isModal: false,
+      like: 0,
+      data: [
+        {
+          title: "노량",
+          year: 2023,
+          category: "액션, 드라마",
+          textRed: "color: red",
+          like : 0,
+          imgUrl: "/assets/노량.jpg",
+        },
+        {
+          title: "아쿠아맨과 로스트 킹덤",
+          year: 2023,
+          category: '액션, 판타지, 어드벤처',
+          like : 0,
+          imgUrl: "/assets/아쿠아맨.jpg",
+        },
+        {
+          title: "3일의 휴가",
+          year: 2023,
+          category: '판타지, 드라마',
+          like : 0,
+          imgUrl: "/assets/3일의휴가.jpg",
+        },
+      ]
     }
   },
   methods: {
-    increseLike(id) {
-      // this.data[i].like += 1;
-      this.data.find(movie => {
-        if(movie.id == id) {
-          movie.like += 1;
-        }
-      })
+    increseLike(i){
+      this.data[i].like += 1;
     },
-    searchMovie(title) {
-      // 영화제목이 포함된 데이터를 가져옴
-      this.data_temp = this.data.filter(movie => {
-        return movie.title.includes(title);
-      })
-    },
-    showAllMovie() {
-      this.data_temp = [...this.data];
+    showModal(i) {
+      this.data[i].isModal = true;
     }
-  },
-  components: {
-    Navbar: Navbar,
-    Event: Event,
-    Modal: Modal,
-    Movies: Movies,
-    SearchBar,
-  },
-  mounted() {
-    console.log('mounted');
-    setInterval(() => {
-      if(this.eventTextNum == this.text.length - 1) {
-        this.eventTextNum = 0;
-      } else {
-        this.eventTextNum += 1;
-      }
-    }, 3000)
-  },
-  unmounted() {
-    clearInterval(this.interval); // 인터발 해제
   }
 
 }
 </script>
 
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-}
+
+ * {
+   box-sizing: border-box;
+   margin: 0;
+ }
 
 body {
   max-width: 768px;
   margin: 0 auto;
+  padding: 20px;
 }
 
 h1,
@@ -158,7 +136,4 @@ button {
   border-radius: 10px;
 }
 
-p:has(.btn-all) {
-  text-align: center;
-}
 </style>
