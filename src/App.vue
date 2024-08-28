@@ -1,4 +1,5 @@
 <template>
+  <Navbar />
   <h1>영화정보</h1>
   <div v-for="(movie, i) in data" :key="i" class="item">
     <figure>
@@ -14,18 +15,13 @@
   </div>
 
 
-  <div class="modal" v-if="isModal">
-    <div class="inner">
-      <h3>{{ data[selectedMovie].title }}</h3>
-      <p>영화 상세정보</p>
-      <button @click="isModal = false">닫기</button>
-    </div>
-  </div>
+  <Modal />
 </template>
 
 <script>
 import data from './assets/movies' //영화데이터
-
+import Navbar from "@/components/Navbar.vue";
+import Modal from "@/components/Modal.vue";
 console.log(data)
 export default {
   name: 'App',
@@ -44,7 +40,9 @@ export default {
     showModal(i) {
       this.data[i].isModal = true;
     }
-  }
+  },
+
+  components: {Modal: Modal, Navbar: Navbar}
 
 }
 </script>
