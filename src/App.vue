@@ -9,14 +9,14 @@
     <p>개봉: {{ movie.year }}</p>
     <p>장르: {{ movie.category }}</p>
     <button @click="increseLike(i)">좋아요</button> <span>{{ movie.like }}</span>
-    <p><button @click = "isModal = true">상세보기</button></p>
+    <p><button @click = "isModal = true; selectedMovie = i">상세보기</button></p>
     </div>
   </div>
 
 
   <div class="modal" v-if="isModal">
     <div class="inner">
-      <h3>Detail</h3>
+      <h3>{{ data[selectedMovie].title }}</h3>
       <p>영화 상세정보</p>
       <button @click="isModal = false">닫기</button>
     </div>
@@ -34,6 +34,7 @@ export default {
       isModal: false,
       like: 0,
       data: data,
+      selectedMovie: 0,
     }
   },
   methods: {
